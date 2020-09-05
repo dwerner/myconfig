@@ -1,4 +1,5 @@
 #!/bin/sh
+# the idea here is to provide a base on which
 set -e
 
 echop() {
@@ -23,4 +24,7 @@ mkdir -p temp_install
 pushd temp_install
 git clone https://github.com/rust-analyzer/rust-analyzer.git && cd rust-analyzer
 cargo xtask install --server
+popd
 
+echo "Running..."
+cargo run
