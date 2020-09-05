@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use directories::UserDirs;
 
 ///
@@ -42,14 +43,29 @@ fn init_logger() {
 
 #[derive(serde_derive::Deserialize, Debug)]
 struct Config {
+    temp_dir: String,
     apt: Vec<String>,
     ppas: Vec<String>,
+    debs: Vec<NameUrl>,
+}
+
+#[derive(serde_derive::Deserialize, Debug)]
+struct NameUrl {
+    name: String,
+    url: String,
 }
 
 #[derive(thiserror::Error, Debug)]
 enum AppError {
     #[error("Unable to get user's dirs")]
     NoUserDirs,
+}
+
+async fn curl(url: &str, filename: &str) -> anyhow::Result<PathBuf> {
+    let _status = std::process::Command::new("curl")
+            .args(&["--no-verbose", "-L", "-o", filename, url])
+            .status()?;
+    Ok(PathBuf::from(filename))
 }
 
 // TODO
@@ -80,6 +96,14 @@ async fn main() -> anyhow::Result<()> {
 
     log::info!("Installing packages {:?}", cfg.apt);
     sudo!(apt install sudo, cfg.apt)?;
+
+    for NameUrl{ name, url } in cfg.debs.iter() {
+        log::info!("grabbing custom deb {} from url {}", name, url);
+        let filename = format!("./{}/{}.deb", cfg.temp_dir, name);
+        curl(&url, &filename).await?;
+        log::info!("installing {}", filename);
+        sudo!(apt install, vec!["-y", &filename])?;
+    }
 
     Ok(())
 }

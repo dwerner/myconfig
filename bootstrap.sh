@@ -1,5 +1,5 @@
 #!/bin/sh
-# the idea here is to provide a base on which
+# base system packages - ie rust, curl, git. Other stuff should be added to packages.yaml
 set -e
 
 echop() {

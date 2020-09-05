@@ -1,4 +1,5 @@
 # add these ppas to the system (can have ppa: prefix or not)
+temp_dir: temp_install
 ppas:
     - neovim-ppa/unstable
 
@@ -8,3 +9,14 @@ apt:
     - neovim
     - zsh
     - tree
+
+# manually downloaded debs
+debs:
+    - name: memleax
+      url: https://github.com/WuBingzheng/memleax/releases/download/v1.1.1/memleax_1.1.1-1_amd64.deb
+
+    - name: vscode
+      url: https://go.microsoft.com/fwlink/?LinkID=760868
+
+    - name: zoom
+      url: https://zoom.us/client/latest/zoom_amd64.deb
