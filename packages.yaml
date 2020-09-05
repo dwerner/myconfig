@@ -1,0 +1,10 @@
+# add these ppas to the system (can have ppa: prefix or not)
+ppas:
+    - neovim-ppa/unstable
+
+# which packages should be installed via apt
+apt:
+    - git
+    - neovim
+    - zsh
+    - tree

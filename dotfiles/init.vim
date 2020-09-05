@@ -44,8 +44,6 @@ if has('nvim')
     autocmd BufRead Cargo.toml call crates#toggle()
 endif
 
-let g:netrw_altv = 1
-
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -57,14 +55,17 @@ set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set showbreak=... "set visual cue for linebreak
 
-let g:golang_goroot = '/home/dan/Development'
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 	syntax on
 	set hlsearch
 endif
+
+" netrw
+let g:netrw_banner = 0
+let g:netrw_winsize = -28
+let g:netrw_liststyle = 3 " tree mode
 
 "ale
 let g:ale_enabled = 1
@@ -117,16 +118,21 @@ function! SaveAndRunGoTest(cmd)
 endfunction
 
 let g:go_fmt_command = "goimports"
+let g:golang_goroot = '/home/dan/Development'
 
-noremap <Leader>r :RustRun<CR>
+
+noremap <Leader>f :Lexplore<CR> " toggle netrw pane
+noremap <silent> <leader>y "+y<CR> " xdg clipboard yank
+noremap <silent> <leader>p "+p<CR> " xdg clipboard plunk
+
+noremap <Leader>r :call SaveAndRunCargo('run')<CR> " :RustRun doesn't work well with rustup
 noremap <Leader>T :RustTest!<CR>
 noremap <Leader>t :RustTest<CR>
 noremap <Leader>b :call SaveAndRunCargo('build')<CR>
 noremap <Leader>m :call SaveAndRunGoTest('./...')<CR>
+
 noremap <silent> <leader>g :YcmCompleter GoToDefinition<CR>
 noremap <leader>c :NextColorScheme<CR>
-noremap <silent> <leader>y "+y<CR>
-noremap <silent> <leader>p "+p<CR>
 noremap <silent> <leader>s :wq<CR>
 noremap <silent> <leader>w :w<CR>
 noremap <silent> <leader>q :q<CR>

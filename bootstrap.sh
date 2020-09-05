@@ -5,9 +5,6 @@ echop() {
     echo "\n$@\n--------------------------------\n"
 }
 
-echop "Installing neovim..."
-sudo add-apt-repository ppa:neovim-ppa/unstable -yy && sudo apt update && sudo apt -qy install neovim
-
 echop "Installing rustup..."
 sudo apt -qqy install curl git
 ./scripts/rustup-init.sh
