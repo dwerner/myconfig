@@ -20,3 +20,9 @@ debs:
 
     - name: zoom
       url: https://zoom.us/client/latest/zoom_amd64.deb
+
+cargo:
+    - ripgrep
+    - exa
+    - bat
+
