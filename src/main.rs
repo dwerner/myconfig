@@ -13,6 +13,9 @@ fn which(progname: &str) -> Option<PathBuf> {
         .arg(progname)
         .output().ok()?;
     let output:String = String::from_utf8_lossy(&out.stdout).into();
+    if output.is_empty() {
+        return None
+    }
     let path = PathBuf::from(output);
     Some(path)
 }
@@ -177,8 +180,6 @@ async fn main() -> anyhow::Result<()> {
     log::info!("my config starting up");
 
     let force_update = false;
-    which("defnotfound").ok_or_else(|| AppError::NoInstalledProg("defnotfound".to_string()))?;
-
     let user_dirs = UserDirs::new().ok_or_else(|| AppError::NoUserDirs)?;
     log::info!("TODO: get dotfiles from/ install dotfiles to home dir {:?}", user_dirs.home_dir());
 
