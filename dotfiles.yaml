@@ -1,0 +1,20 @@
+symlink:
+    - name: vimrc
+      src: dotfiles/.vimrc
+      dst: .vimrc
+
+    - name: zshrc
+      src: dotfiles/.zshrc
+      dst: .zshrc
+
+    - name: nvim config
+      src: dotfiles/init.vim
+      dst: .config/nvim/init.vim
+
+    - name: vscode settings
+      src: dotfiles/vscode-settings.json
+      dst: .config/Code/User/settings.json
+
+    - name: git config
+      src: dotfile/.gitconfig
+      dst: .gitconfig

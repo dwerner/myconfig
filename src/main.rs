@@ -6,7 +6,6 @@ use directories::UserDirs;
 /// myconfigs is intended to act as a more robust dotfiles - it gathers configs, watches for
 /// changes, commits to it's own repo, and provides an automated setup tool. (TODO)
 ///
-///
 
 fn which(progname: &str) -> Option<PathBuf> {
     let out: std::process::Output = std::process::Command::new("which")
@@ -18,6 +17,10 @@ fn which(progname: &str) -> Option<PathBuf> {
     }
     let path = PathBuf::from(output);
     Some(path)
+}
+
+fn symlink(src: &str, dest: &str) -> anyhow::Result<()> {
+    todo!()
 }
 
 macro_rules! cmd {
@@ -178,6 +181,9 @@ fn install_cargo_packages(cfg: &Config) -> anyhow::Result<()> {
 async fn main() -> anyhow::Result<()> {
     init_logger();
     log::info!("my config starting up");
+
+    // dotfiles.yml
+    // load and symlink
 
     let force_update = false;
     let user_dirs = UserDirs::new().ok_or_else(|| AppError::NoUserDirs)?;

@@ -7,35 +7,26 @@ filetype off
 
 set rtp+=$HOME/.vim/bundle/Vundle.Vim/
 
-call vundle#begin()
-    Plugin 'VundleVim/Vundle.Vim'
-    Plugin 'mhinz/vim-crates'
-    Plugin 'tpope/vim-fugitive.git'
-    Plugin 'tpope/vim-surround'
-    Plugin 'tpope/vim-dispatch'
-    Plugin 'walm/jshint.vim'
-    Plugin 'bling/vim-airline'
-    Plugin 'suan/vim-instant-markdown'
-    Plugin 'ekalinin/Dockerfile.vim'
-    Plugin 'flazz/vim-colorschemes'
-    Plugin 'tikhomirov/vim-glsl'
-    Plugin 'fatih/vim-go'
-    Plugin 'valloric/YouCompleteMe'
-    Plugin 'rjohnsondev/vim-compiler-go'
-    Plugin 'leafgarland/typescript-vim'
-    Plugin 'tfnico/vim-gradle'
-    Plugin 'udalov/kotlin-vim'
-    Plugin 'ntpeters/vim-better-whitespace'
-    Plugin 'xolox/vim-colorscheme-switcher'
-    Plugin 'xolox/vim-reload'
-    Plugin 'xolox/vim-misc'
-    Plugin 'rust-lang/rust.vim'
-    Plugin 'neovim/nvim-lsp'
+call plug#begin()
+    Plug 'dag/vim-fish'
+    Plug 'mhinz/vim-crates'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-dispatch'
+    Plug 'suan/vim-instant-markdown'
+    Plug 'ekalinin/Dockerfile.vim'
+    Plug 'flazz/vim-colorschemes'
 
-    "syntastic conflicts with ale, and ale is asynchronous
-    " Plugin 'scrooloose/syntastic'
-    Plugin 'w0rp/ale'
-call vundle#end()
+    Plug 'w0rp/ale'
+
+    Plug 'udalov/kotlin-vim'
+    Plug 'ntpeters/vim-better-whitespace'
+    Plug 'xolox/vim-colorscheme-switcher'
+    Plug 'xolox/vim-reload'
+    Plug 'xolox/vim-misc'
+    Plug 'rust-lang/rust.vim'
+    Plug 'neovim/nvim-lsp'
+
+call plug#end()
 
 filetype plugin indent on
 

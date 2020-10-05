@@ -1,0 +1,17 @@
+{
+    "editor.mouseWheelZoom": true,
+    "window.zoomLevel": 1,
+    "files.autoSave": "afterDelay",
+    "editor.fontFamily": "'Agave', 'monofur', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.fontSize": 16,
+    "editor.fontWeight": "normal",
+    "workbench.colorTheme": "Hopscotch",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true
+    },
+    "[rust]": {
+        "editor.defaultFormatter": "matklad.rust-analyzer"
+    }
+}
