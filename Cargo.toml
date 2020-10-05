@@ -4,6 +4,12 @@ version = "0.1.0"
 authors = ["Daniel Werner <dan.werner@gmail.com>"]
 edition = "2018"
 
+[lib]
+name = "myconfig"
+
+[[bin]]
+name = "myconfig"
+
 [dependencies]
 async-std = { version = "1.6", features = ["attributes"]}
 # iced = "0.1"
