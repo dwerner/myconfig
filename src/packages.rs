@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{common, cmd, sudo};
+use crate::{cmd, common, sudo};
 
 #[derive(serde_derive::Deserialize, Debug)]
 pub struct PackagesConfig {
@@ -13,20 +13,25 @@ pub struct PackagesConfig {
     pub ppas: HashSet<String>,
 
     #[serde(default)]
-    pub debs: HashSet<NameUrl>,
+    pub debs: HashSet<Download>,
 
     #[serde(default)]
     pub cargo: HashSet<String>,
+
+    #[serde(default)]
+    pub curl: HashSet<Download>,
 }
 
 #[derive(serde_derive::Deserialize, Debug, PartialEq, Eq, Hash)]
-pub struct NameUrl {
+pub struct Download {
     pub name: String,
     pub url: String,
+
+    #[serde(default)]
+    pub dst: String,
 }
 
 impl PackagesConfig {
-
     pub fn install_ppas(&self) -> anyhow::Result<()> {
         for ppa in self.ppas.iter() {
             let ppa_str = if ppa.starts_with("ppa:") {
@@ -46,7 +51,7 @@ impl PackagesConfig {
         let not_installed = common::find_not_installed(&self.apt);
         if not_installed.is_empty() {
             log::info!("apt pkgs already installed: {:?}", self.cargo);
-            return Ok(())
+            return Ok(());
         }
 
         let mut apt = vec!["apt", "-qqy", "install"];
@@ -58,8 +63,22 @@ impl PackagesConfig {
         Ok(())
     }
 
+    pub fn install_direct_curls(&self, user_home_dir: &str) -> anyhow::Result<()> {
+        for Download { name, url, dst } in self.curl.iter() {
+            let filename = format!("{}/{}", user_home_dir, dst);
+            log::info!(
+                "direct curl {} : {} -downloaded to-> {}",
+                name,
+                url,
+                filename
+            );
+            cmd!(["curl", "-L", "-o", &filename, &url])?;
+        }
+        Ok(())
+    }
+
     pub fn install_downloaded_debs(&self, force_update: bool) -> anyhow::Result<()> {
-        for NameUrl{ name, url } in self.debs.iter() {
+        for Download { name, url, .. } in self.debs.iter() {
             match common::which(name) {
                 Some(path) if !force_update => {
                     log::info!("found {} at {:?}, no need to install", name, path);
@@ -80,7 +99,7 @@ impl PackagesConfig {
         let not_installed = common::find_not_installed(&self.cargo);
         if not_installed.is_empty() {
             log::info!("cargo pkgs already installed: {:?}", self.cargo);
-            return Ok(())
+            return Ok(());
         }
 
         log::info!("Installing cargo packages {:?}", not_installed);

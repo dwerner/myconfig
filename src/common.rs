@@ -1,13 +1,14 @@
-use std::path::PathBuf;
 use std::collections::HashSet;
+use std::path::PathBuf;
 
 pub fn which(progname: &str) -> Option<PathBuf> {
     let out: std::process::Output = std::process::Command::new("which")
         .arg(progname)
-        .output().ok()?;
-    let output:String = String::from_utf8_lossy(&out.stdout).into();
+        .output()
+        .ok()?;
+    let output: String = String::from_utf8_lossy(&out.stdout).into();
     if output.is_empty() {
-        return None
+        return None;
     }
     let path = PathBuf::from(output);
     Some(path)
@@ -54,10 +55,16 @@ pub enum AppError {
     #[error("Unable to get user's dirs")]
     NoUserDirs,
 
+    #[error("Unable to get user's home dir")]
+    NoHomeDir,
+
     #[error("Unable to find program {0}")]
-    NoInstalledProg(String)
+    NoInstalledProg(String),
 }
 
 pub fn find_not_installed(exes: &HashSet<String>) -> HashSet<String> {
-    exes.iter().filter(|i| which(i).is_none()).cloned().collect::<HashSet<_>>()
+    exes.iter()
+        .filter(|i| which(i).is_none())
+        .cloned()
+        .collect::<HashSet<_>>()
 }

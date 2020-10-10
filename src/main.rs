@@ -34,7 +34,8 @@ async fn main() -> anyhow::Result<()> {
 
     let force_update = false;
     let user_dirs = UserDirs::new().ok_or_else(|| AppError::NoUserDirs)?;
-    log::info!("TODO: get dotfiles from/ install dotfiles to home dir {:?}", user_dirs.home_dir());
+    let home_dir = user_dirs.home_dir().to_str().map(str::to_string).ok_or_else(|| AppError::NoHomeDir)?;
+    log::info!("TODO: get dotfiles from/ install dotfiles to home dir {:?}", home_dir);
 
     let packages = async_std::fs::read_to_string("packages.yaml").await?;
     let p = serde_yaml::from_str::<PackagesConfig>(&packages)?;
@@ -43,6 +44,7 @@ async fn main() -> anyhow::Result<()> {
     p.install_apt_packages()?;
     p.install_downloaded_debs(force_update)?;
     p.install_cargo_packages()?;
+    p.install_direct_curls(&home_dir)?;
 
     Ok(())
 }

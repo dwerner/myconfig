@@ -5,8 +5,6 @@
 set nocompatible
 filetype off
 
-set rtp+=$HOME/.vim/bundle/Vundle.Vim/
-
 call plug#begin()
     Plug 'dag/vim-fish'
     Plug 'mhinz/vim-crates'
@@ -24,16 +22,20 @@ call plug#begin()
     Plug 'xolox/vim-reload'
     Plug 'xolox/vim-misc'
     Plug 'rust-lang/rust.vim'
-    Plug 'neovim/nvim-lsp'
+
+    if has('nvim')
+        Plug 'neovim/nvim-lsp'
+    endif
 
 call plug#end()
-
-filetype plugin indent on
 
 if has('nvim')
     lua require'nvim_lsp'.rust_analyzer.setup{}
     autocmd BufRead Cargo.toml call crates#toggle()
 endif
+
+filetype plugin indent on
+
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
