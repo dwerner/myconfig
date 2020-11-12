@@ -1,4 +1,4 @@
-symlink:
+symlinks:
     - name: vimrc
       src: dotfiles/.vimrc
       dst: .vimrc
@@ -16,6 +16,14 @@ symlink:
       dst: .config/Code/User/settings.json
 
     - name: git config
-      src: dotfile/.gitconfig
+      src: dotfiles/.gitconfig
       dst: .gitconfig
+
+    - name: fish config
+      src: dotfiles/fish/config.fish
+      dst: .config/fish/config.fish
+
+    - name: fish prompt
+      src: dotfiles/fish/functions/fish_prompt.fish
+      dst: .config/fish/functions/fish_prompt.fish
 

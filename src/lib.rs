@@ -1,2 +1,3 @@
-pub mod packages;
 pub mod common;
+pub mod dotfiles;
+pub mod packages;

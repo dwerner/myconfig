@@ -1,22 +1,6 @@
 use std::collections::HashSet;
+use std::io::Error as IoError;
 use std::path::PathBuf;
-
-pub fn which(progname: &str) -> Option<PathBuf> {
-    let out: std::process::Output = std::process::Command::new("which")
-        .arg(progname)
-        .output()
-        .ok()?;
-    let output: String = String::from_utf8_lossy(&out.stdout).into();
-    if output.is_empty() {
-        return None;
-    }
-    let path = PathBuf::from(output);
-    Some(path)
-}
-
-pub fn symlink(src: &str, dest: &str) -> anyhow::Result<()> {
-    todo!()
-}
 
 #[macro_export]
 macro_rules! cmd {
@@ -50,6 +34,19 @@ macro_rules! sudo {
     }};
 }
 
+pub fn which(progname: &str) -> Option<PathBuf> {
+    let out: std::process::Output = std::process::Command::new("which")
+        .arg(progname)
+        .output()
+        .ok()?;
+    let output: String = String::from_utf8_lossy(&out.stdout).into();
+    if output.is_empty() {
+        return None;
+    }
+    let path = PathBuf::from(output);
+    Some(path)
+}
+
 #[derive(thiserror::Error, Debug)]
 pub enum AppError {
     #[error("Unable to get user's dirs")]
@@ -60,6 +57,14 @@ pub enum AppError {
 
     #[error("Unable to find program {0}")]
     NoInstalledProg(String),
+
+    #[error("IoError with file {0} {1:?}")]
+    IoError(String, IoError),
+}
+
+pub fn symlink(src: &str, dest: &str) -> anyhow::Result<()> {
+    cmd!(ln, &["-s", src, dest])?;
+    Ok(())
 }
 
 pub fn find_not_installed(exes: &HashSet<String>) -> HashSet<String> {

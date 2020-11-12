@@ -12,6 +12,7 @@ name = "myconfig"
 
 [dependencies]
 async-std = { version = "1.6", features = ["attributes"]}
+clap = "2.33"
 # iced = "0.1"
 directories = "3"
 log = "0.4"
