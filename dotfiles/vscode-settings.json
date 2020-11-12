@@ -5,7 +5,7 @@
     "editor.fontFamily": "'Agave', 'monofur', 'monospace', monospace, 'Droid Sans Fallback'",
     "editor.fontSize": 16,
     "editor.fontWeight": "normal",
-    "workbench.colorTheme": "Hopscotch",
+    "workbench.colorTheme": "Shades of Purple",
     "files.watcherExclude": {
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
@@ -13,5 +13,6 @@
     },
     "[rust]": {
         "editor.defaultFormatter": "matklad.rust-analyzer"
-    }
+    },
+    "C_Cpp.updateChannel": "Insiders"
 }

@@ -21,6 +21,9 @@ rustup component add clippy
 echop "Installing rustfmt..."
 rustup component add rustfmt
 
+echop "Installing rust-src..."
+rustup component add rust-src
+
 echop "Installing rust-analyzer..."
 mkdir -p temp_install
 pushd temp_install

@@ -18,6 +18,7 @@ apt:
     - nodejs
     - npm
     - python3-pip
+    - simple-scan
 
 # TODO
 pip:

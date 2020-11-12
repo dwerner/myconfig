@@ -18,3 +18,4 @@ symlink:
     - name: git config
       src: dotfile/.gitconfig
       dst: .gitconfig
+

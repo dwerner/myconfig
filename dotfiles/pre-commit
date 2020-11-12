@@ -1,0 +1,28 @@
+#!/bin/bash
+
+echo ".git/hooks/pre-commit running, don't assume commit succeeded!"
+
+diff=$(cargo fmt -- --check)
+result=$?
+
+if [[ ${result} -ne 0 ]] ; then
+    cat <<\EOF
+There are fmt issues, run `cargo fmt` first.
+EOF
+    echo $"$diff"
+    exit 1
+fi
+
+
+diff=$(cargo clippy --all-targets --all-features --workspace -- -D warnings -A renamed_and_removed_lints)
+result=$?
+
+if [[ ${result} -ne 0 ]] ; then
+    cat <<\EOF
+make lint failed:
+EOF
+    echo $"$diff"
+    exit 1
+fi
+
+exit 0

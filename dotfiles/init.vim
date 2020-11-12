@@ -8,6 +8,9 @@ filetype off
 set rtp+=$HOME/.vim/bundle/Vundle.Vim/
 
 call plug#begin()
+
+    Plug 'aklt/plantuml-syntax'
+
     Plug 'dag/vim-fish'
     Plug 'mhinz/vim-crates'
     Plug 'tpope/vim-surround'
@@ -15,9 +18,7 @@ call plug#begin()
     Plug 'suan/vim-instant-markdown'
     Plug 'ekalinin/Dockerfile.vim'
     Plug 'flazz/vim-colorschemes'
-
     Plug 'w0rp/ale'
-
     Plug 'udalov/kotlin-vim'
     Plug 'ntpeters/vim-better-whitespace'
     Plug 'xolox/vim-colorscheme-switcher'
