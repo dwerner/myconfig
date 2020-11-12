@@ -20,10 +20,6 @@ apt:
     - python3-pip
     - simple-scan
 
-# TODO
-pip:
-    - git-filter-repo
-
 # manually downloaded debs
 debs:
     - name: memleax
@@ -43,3 +39,7 @@ cargo:
     - exa
     - bat
 
+curl:
+    - name: vim-plug
+      url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      dst: .local/share/nvim/site/autoload/plug.vim

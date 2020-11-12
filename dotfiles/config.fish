@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-source $HOME/myconfig/dotfiles/rustenv.fish
+source $HOME/.config/fish/rustenv.fish
 
 function parse_git_branch
   set -l branch (git branch 2> /dev/null | grep -e '\* ' | sed 's/^..\(.*\)/\1/')
