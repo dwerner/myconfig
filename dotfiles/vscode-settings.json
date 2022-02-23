@@ -1,11 +1,8 @@
 {
     "editor.mouseWheelZoom": true,
-    "window.zoomLevel": 1,
-    "files.autoSave": "afterDelay",
     "editor.fontFamily": "'Agave', 'monofur', 'monospace', monospace, 'Droid Sans Fallback'",
-    "editor.fontSize": 16,
     "editor.fontWeight": "normal",
-    "workbench.colorTheme": "Shades of Purple",
+    "workbench.colorTheme": "Bluloco Dark",
     "files.watcherExclude": {
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
@@ -14,5 +11,31 @@
     "[rust]": {
         "editor.defaultFormatter": "matklad.rust-analyzer"
     },
-    "C_Cpp.updateChannel": "Insiders"
+    "C_Cpp.updateChannel": "Insiders",
+    "local-history.path": "~/Development/vscode-local-history",
+    "editor.renderControlCharacters": true,
+    "files.autoSave": "onFocusChange",
+    "[python]": {
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ]
+    },
+    "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "terminal.integrated.scrollback": 10000,
+    "editor.tabSize": 4,
+    "rust-analyzer.updates.channel": "nightly",
+    "rust-analyzer.experimental.procAttrMacros": true,
+    "rust-analyzer.checkOnSave.allTargets": true,
+    "rust-analyzer.checkOnSave.allFeatures": true,
+    "rust-analyzer.cargo.allFeatures": true,
+    "rust-analyzer.inlayHints.typeHints": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.zoomLevel": 1,
+    // Inlay hints have been pushing the line length past acceptable.
+    // "rust-analyzer.inlayHints.smallerHints": true,
+    // "rust-analyzer.inlayHints.chainingHints": false,
 }

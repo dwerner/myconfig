@@ -1,9 +1,15 @@
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    path::{Path, PathBuf},
+};
 
 use crate::{cmd, common, sudo};
 
 #[derive(serde_derive::Deserialize, Debug)]
 pub struct PackagesConfig {
+    #[serde(default)]
+    pub dry_run: bool,
+
     pub temp_dir: String,
 
     #[serde(default)]
@@ -27,30 +33,38 @@ pub struct Download {
     pub name: String,
     pub url: String,
 
-    #[serde(default)]
+    #[serde(alias = "dest", default = "Download::default_destination")]
     pub dst: String,
+}
+
+impl Download {
+    fn default_destination() -> String {
+        "temp_install".to_string()
+    }
 }
 
 impl PackagesConfig {
     pub fn install_ppas(&self) -> anyhow::Result<()> {
+        log::info!("Installing ppas...");
         for ppa in self.ppas.iter() {
-            let ppa_str = if ppa.starts_with("ppa:") {
-                ppa.clone()
-            } else {
-                format!("ppa:{}", ppa)
-            };
-            let status = sudo!(&["add-apt-repository", "-y", &ppa_str])?;
-            log::debug!("added ppa {} - status {}", ppa, status);
+            let ppa_str = normalize_ppa_str(ppa);
+            let cmd = sudo!(&["add-apt-repository", "-y", &ppa_str]);
+            self.exec_or_log_command(cmd)?;
         }
         log::debug!("after adding ppas, we run apt update");
-        sudo!(apt update, ["-qq"])?;
+        self.exec_or_log_command(sudo!(apt update, ["-qq"]))?;
         Ok(())
     }
 
     pub fn install_apt_packages(&self) -> anyhow::Result<()> {
+        log::info!("Installing apt packages...");
+        let installed = common::find_installed(&self.apt);
+        if !installed.is_empty() {
+            log::info!("already installed (will skip): {:?}", installed);
+        }
         let not_installed = common::find_not_installed(&self.apt);
         if not_installed.is_empty() {
-            log::info!("apt pkgs already installed: {:?}", self.cargo);
+            log::info!("all apt pkgs already installed, skipping...");
             return Ok(());
         }
 
@@ -59,20 +73,30 @@ impl PackagesConfig {
         for pkg in not_installed.iter() {
             apt.push(pkg);
         }
-        sudo!(apt)?;
+        self.exec_or_log_command(sudo!(apt))?;
         Ok(())
     }
 
-    pub fn install_direct_curls(&self, user_home_dir: &str) -> anyhow::Result<()> {
+    pub fn install_direct_curls(&self, user_home_dir: impl AsRef<Path>) -> anyhow::Result<()> {
         for Download { name, url, dst } in self.curl.iter() {
-            let filename = format!("{}/{}", user_home_dir, dst);
+            let mut user_home_dest = PathBuf::from(user_home_dir.as_ref());
+            user_home_dest.push(if dst.is_empty() {
+                Download::default_destination()
+            } else {
+                dst.to_owned()
+            });
+
+            let filename = user_home_dest
+                .to_str()
+                .ok_or_else(|| anyhow::anyhow!("unable to get path to destination"))?;
+
             log::info!(
                 "direct curl {} : {} -downloaded to-> {}",
                 name,
                 url,
                 filename
             );
-            cmd!(["curl", "-L", "-o", &filename, &url])?;
+            self.exec_or_log_command(cmd!(["curl", "-L", "-o", &filename, &url]))?;
         }
         Ok(())
     }
@@ -86,11 +110,31 @@ impl PackagesConfig {
                 _ => {
                     log::info!("grabbing custom deb {} from url {}", name, url);
                     let filename = format!("./{}/{}.deb", self.temp_dir, name);
-                    cmd!(["curl", "-L", "-o", &filename, &url])?;
+                    let curl = cmd!(["curl", "-L", "-o", &filename, &url]);
+                    self.exec_or_log_command(curl)?;
+
                     log::info!("installing {}", filename);
-                    sudo!(apt install, ["-y", &filename])?;
+                    let apt_install = sudo!(apt install, ["-y", &filename]);
+                    self.exec_or_log_command(apt_install)?;
                 }
             }
+        }
+        Ok(())
+    }
+
+    fn exec_or_log_command(
+        &self,
+        mut apt_install: std::process::Command,
+    ) -> Result<(), anyhow::Error> {
+        if self.dry_run {
+            log::info!("dry_run: {:?}", apt_install);
+        } else {
+            let status = apt_install.status()?;
+            log::info!(
+                "ran command {:?} exited with status {}",
+                apt_install,
+                status
+            );
         }
         Ok(())
     }
@@ -107,7 +151,16 @@ impl PackagesConfig {
         for pkg in not_installed.iter() {
             cargo.push(pkg);
         }
-        cmd!(cargo)?;
+        self.exec_or_log_command(cmd!(cargo))?;
         Ok(())
     }
+}
+
+fn normalize_ppa_str(ppa: &String) -> String {
+    let ppa_str = if ppa.starts_with("ppa:") {
+        ppa.clone()
+    } else {
+        format!("ppa:{}", ppa)
+    };
+    ppa_str
 }

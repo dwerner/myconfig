@@ -1,3 +1,4 @@
+# For now the convention is to run this in $HOME and use relative paths.
 symlinks:
     - name: vimrc
       src: dotfiles/.vimrc

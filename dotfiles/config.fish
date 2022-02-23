@@ -1,6 +1,8 @@
 #!/usr/bin/env fish
 source $HOME/.config/fish/rustenv.fish
 
+set GPG_TTY (tty)
+
 function parse_git_branch
   set -l branch (git branch 2> /dev/null | grep -e '\* ' | sed 's/^..\(.*\)/\1/')
   set -l git_status (git status -s)
@@ -61,3 +63,11 @@ end
 function edit-fish-config
     $EDITOR $HOME/.config/fish/config.fish
 end
+
+function add-dir-to-path-front
+    set PATH $PATH $argv
+end
+
+# Created by `userpath` on 2021-02-01 21:59:20
+add-dir-to-path-front $HOME/.local/bin
+add-dir-to-path-front $HOME/.npm-packages/bin

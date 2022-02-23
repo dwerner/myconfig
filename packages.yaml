@@ -22,9 +22,6 @@ apt:
 
 # manually downloaded debs
 debs:
-    - name: memleax
-      url: https://github.com/WuBingzheng/memleax/releases/download/v1.1.1/memleax_1.1.1-1_amd64.deb
-
     - name: code
       url: https://go.microsoft.com/fwlink/?LinkID=760868
 
@@ -32,14 +29,21 @@ debs:
       url: https://zoom.us/client/latest/zoom_amd64.deb
 
     - name: slack
-      url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.8.0-amd64.deb
+      url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.23.0-amd64.deb
 
+# installed with cargo
 cargo:
     - ripgrep
     - exa
     - bat
 
+# manually downloaded files
 curl:
     - name: vim-plug
       url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
       dst: .local/share/nvim/site/autoload/plug.vim
+
+    # update rustup installer
+    - name: rustup-init
+      url: https://sh.rustup.rs
+      dst: rustup-init.sh

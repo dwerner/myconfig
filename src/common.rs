@@ -1,20 +1,21 @@
 use std::collections::HashSet;
 use std::io::Error as IoError;
 use std::path::PathBuf;
+use std::process::{Command, Output};
 
 #[macro_export]
 macro_rules! cmd {
     ($i:ident, $e:expr) => {{
         let mut cmd = std::process::Command::new(stringify!($i));
         cmd.args($e);
-        cmd.status()
+        cmd
     }};
     ($e:expr) => {{
         let mut cmd = std::process::Command::new($e[0]);
         if $e.len() > 1 {
             cmd.args($e[1..].to_vec());
         }
-        cmd.status()
+        cmd
     }};
 }
 
@@ -35,16 +36,19 @@ macro_rules! sudo {
 }
 
 pub fn which(progname: &str) -> Option<PathBuf> {
-    let out: std::process::Output = std::process::Command::new("which")
-        .arg(progname)
-        .output()
-        .ok()?;
+    let out: Output = Command::new("which").arg(progname).output().ok()?;
     let output: String = String::from_utf8_lossy(&out.stdout).into();
     if output.is_empty() {
         return None;
     }
     let path = PathBuf::from(output);
     Some(path)
+}
+
+pub fn version(program: &str) -> Result<String, anyhow::Error> {
+    let output: Output = Command::new("which").arg(program).arg("-v").output()?;
+    let stdout = String::from_utf8(output.stdout)?;
+    Ok(stdout)
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -63,8 +67,15 @@ pub enum AppError {
 }
 
 pub fn symlink(src: &str, dest: &str) -> anyhow::Result<()> {
-    cmd!(ln, &["-s", src, dest])?;
+    cmd!(ln, &["-s", src, dest]).status()?;
     Ok(())
+}
+
+pub fn find_installed(exes: &HashSet<String>) -> HashSet<String> {
+    exes.iter()
+        .filter(|i| which(i).is_some())
+        .cloned()
+        .collect::<HashSet<_>>()
 }
 
 pub fn find_not_installed(exes: &HashSet<String>) -> HashSet<String> {

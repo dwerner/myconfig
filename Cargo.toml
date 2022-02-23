@@ -11,17 +11,15 @@ name = "myconfig"
 name = "myconfig"
 
 [dependencies]
+anyhow = "1"
 async-std = { version = "1.6", features = ["attributes"]}
-clap = "2.33"
-# iced = "0.1"
-directories = "3"
+structopt = "0.3"
+directories = "4"
 log = "0.4"
 serde = "1"
 serde_derive = "1"
 serde_json = "1"
 serde_yaml= "0.8"
-simplelog = "0.8"
-
-anyhow = "1"
+simplelog = "0.11"
 thiserror = "1"
 
